@@ -1,0 +1,17 @@
+{
+  "name": "workerskit-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "cf-typegen": "wrangler types"
+  },
+  "dependencies": {
+    "workerskit": "file:.."
+  },
+  "devDependencies": {
+    "wrangler": "^4.86.0",
+    "@types/node": "^25.6.0",
+    "typescript": "^6.0.3"
+  }
+}

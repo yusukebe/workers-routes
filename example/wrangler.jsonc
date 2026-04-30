@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "flare-example",
+  "main": "src/index.ts",
+  "assets": {
+    "directory": "routes",
+    "binding": "ASSETS"
+  },
+  "worker_loaders": [
+    {
+      "binding": "LOADER"
+    }
+  ],
+  "compatibility_date": "2026-03-17"
+}
