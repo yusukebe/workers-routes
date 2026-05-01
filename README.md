@@ -2,7 +2,7 @@
 
 A file-based routing framework for Cloudflare Workers. Each route file runs as an **independent Dynamic Worker** — fully isolated, loaded via the Worker Loader binding.
 
-> **Status:** experimental. Worker Loader is in closed beta.
+> **Status:** experimental.
 
 ## Install
 
