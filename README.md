@@ -2,7 +2,13 @@
 
 A file-based routing framework for Cloudflare Workers. Each route file runs as an **independent Dynamic Worker** — fully isolated, loaded via the Worker Loader binding.
 
-> **Status:** experimental. Not yet published to npm. Worker Loader is in closed beta.
+> **Status:** experimental. Worker Loader is in closed beta.
+
+## Install
+
+```sh
+npm i workers-routes
+```
 
 ## How it looks
 
@@ -63,7 +69,7 @@ Or with options:
 
 ```ts
 import { prod } from 'workers-routes/prod'
-export default prod({ dir: 'subdir' })  // fetches subdir/<name>.js via ASSETS
+export default prod({ dir: 'subdir' }) // fetches subdir/<name>.js via ASSETS
 ```
 
 ## Wrangler config
@@ -111,14 +117,14 @@ bun run dev
 
 ## How it works
 
-| | dev | prod |
-|---|---|---|
-| Host entry | `src/dev.ts` (`workers-routes/dev`) | `src/prod.ts` (`workers-routes/prod`) |
-| Route source on disk | `routes/<name>.ts` | `dist/<name>.js` (built) |
-| ASSETS binding directory | `routes` | `dist` (via `--assets dist`) |
-| Bundling | runtime via `@cloudflare/worker-bundler` | build-time via `bun build` |
-| LOADER cache key | `<name>:<sha256(source)>` (auto-invalidates) | `<name>` |
-| Host bundle size | includes worker-bundler | ~1.6 KiB |
+|                          | dev                                          | prod                                  |
+| ------------------------ | -------------------------------------------- | ------------------------------------- |
+| Host entry               | `src/dev.ts` (`workers-routes/dev`)          | `src/prod.ts` (`workers-routes/prod`) |
+| Route source on disk     | `routes/<name>.ts`                           | `dist/<name>.js` (built)              |
+| ASSETS binding directory | `routes`                                     | `dist` (via `--assets dist`)          |
+| Bundling                 | runtime via `@cloudflare/worker-bundler`     | build-time via `bun build`            |
+| LOADER cache key         | `<name>:<sha256(source)>` (auto-invalidates) | `<name>`                              |
+| Host bundle size         | includes worker-bundler                      | ~1.6 KiB                              |
 
 ## References
 
