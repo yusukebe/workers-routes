@@ -4,14 +4,16 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
+    "build": "bun build ./routes/*.ts --outdir=./dist --target=browser --format=esm --minify",
+    "deploy": "bun run build && wrangler deploy src/prod.ts --assets dist",
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
+    "hono": "^4.7.0",
     "workerskit": "file:.."
   },
   "devDependencies": {
-    "wrangler": "^4.86.0",
-    "@types/node": "^25.6.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.86.0"
   }
 }

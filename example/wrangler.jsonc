@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "flare-example",
-  "main": "src/index.ts",
+  "name": "workerskit-example",
+  "main": "src/dev.ts",
   "assets": {
     "directory": "routes",
     "binding": "ASSETS"
