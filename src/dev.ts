@@ -26,9 +26,11 @@ const makeLoad = (options: DevOptions) => {
 
     return env.LOADER.get(`${routeName}:${hash}`, async () => {
       const { createWorker } = await import('@cloudflare/worker-bundler')
+      const entryPoint = `index.${ext}`
       const { mainModule, modules } = await createWorker({
+        entryPoint,
         files: {
-          [`index.${ext}`]: source,
+          [entryPoint]: source,
           'package.json': JSON.stringify({ dependencies })
         }
       })
