@@ -2,23 +2,33 @@ import { makeHandler, type KakeraBindings } from './shared.js'
 
 export interface DevOptions {
   dependencies?: Record<string, string>
+  extensions?: string[]
 }
 
 const makeLoad = (options: DevOptions) => {
   const dependencies = options.dependencies ?? {}
+  const extensions = options.extensions ?? ['ts', 'tsx']
   return async (env: KakeraBindings, routeName: string) => {
-    const tsRes = await env.ASSETS.fetch(new Request(`http://dummy/${routeName}.ts`))
-    if (!tsRes.ok) {
+    let source: string | null = null
+    let ext: string | null = null
+    for (const candidate of extensions) {
+      const res = await env.ASSETS.fetch(new Request(`http://dummy/${routeName}.${candidate}`))
+      if (res.ok) {
+        source = new TextDecoder().decode(await res.arrayBuffer())
+        ext = candidate
+        break
+      }
+    }
+    if (source === null || ext === null) {
       return null
     }
-    const source = new TextDecoder().decode(await tsRes.arrayBuffer())
     const hash = await sha256(source)
 
     return env.LOADER.get(`${routeName}:${hash}`, async () => {
       const { createWorker } = await import('@cloudflare/worker-bundler')
       const { mainModule, modules } = await createWorker({
         files: {
-          'index.ts': source,
+          [`index.${ext}`]: source,
           'package.json': JSON.stringify({ dependencies })
         }
       })

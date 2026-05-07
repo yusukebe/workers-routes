@@ -58,6 +58,15 @@ export default dev({ dependencies: pkg.dependencies })
 
 `dependencies` flows into the bundler so route imports (`hono`, etc.) resolve.
 
+By default, both `routes/<name>.ts` and `routes/<name>.tsx` are picked up. Override with `extensions`:
+
+```ts
+dev({
+  dependencies: pkg.dependencies,
+  extensions: ['ts', 'tsx', 'mts']
+})
+```
+
 ### Prod: pre-built, tiny host
 
 `kakera-worker/prod` reads pre-built `.js` bundles from the assets directory. The host worker is **~1.6 KiB** — `@cloudflare/worker-bundler` is fully tree-shaken out.
@@ -72,6 +81,12 @@ Or with options:
 ```ts
 import { prod } from 'kakera-worker/prod'
 export default prod({ dir: 'subdir' }) // fetches subdir/<name>.js via ASSETS
+```
+
+Same `extensions` option as dev (default `['js']`):
+
+```ts
+prod({ extensions: ['js', 'mjs'] })
 ```
 
 ## Wrangler config
@@ -119,14 +134,14 @@ bun run dev
 
 ## How it works
 
-|                          | dev                                          | prod                          |
-| ------------------------ | -------------------------------------------- | ----------------------------- |
+|                          | dev                                          | prod                                 |
+| ------------------------ | -------------------------------------------- | ------------------------------------ |
 | Host entry               | `src/dev.ts` (`kakera-worker/dev`)           | `src/prod.ts` (`kakera-worker/prod`) |
-| Route source on disk     | `routes/<name>.ts`                           | `dist/<name>.js` (built)      |
-| ASSETS binding directory | `routes`                                     | `dist` (via `--assets dist`)  |
-| Bundling                 | runtime via `@cloudflare/worker-bundler`     | build-time via `bun build`    |
-| LOADER cache key         | `<name>:<sha256(source)>` (auto-invalidates) | `<name>`                      |
-| Host bundle size         | includes worker-bundler                      | ~1.6 KiB                      |
+| Route source on disk     | `routes/<name>.ts`                           | `dist/<name>.js` (built)             |
+| ASSETS binding directory | `routes`                                     | `dist` (via `--assets dist`)         |
+| Bundling                 | runtime via `@cloudflare/worker-bundler`     | build-time via `bun build`           |
+| LOADER cache key         | `<name>:<sha256(source)>` (auto-invalidates) | `<name>`                             |
+| Host bundle size         | includes worker-bundler                      | ~1.6 KiB                             |
 
 ## References
 

@@ -2,15 +2,24 @@ import { makeHandler, type KakeraBindings } from './shared.js'
 
 export interface ProdOptions {
   dir?: string
+  extensions?: string[]
 }
 
 const makeLoad = (options: ProdOptions) => {
   const dir = options.dir ?? ''
   const prefix = dir ? `${dir}/` : ''
+  const extensions = options.extensions ?? ['js']
   return async (env: KakeraBindings, routeName: string) => {
-    const path = `${prefix}${routeName}.js`
-    const head = await env.ASSETS.fetch(new Request(`http://dummy/${path}`, { method: 'HEAD' }))
-    if (!head.ok) {
+    let path: string | null = null
+    for (const ext of extensions) {
+      const candidate = `${prefix}${routeName}.${ext}`
+      const head = await env.ASSETS.fetch(new Request(`http://dummy/${candidate}`, { method: 'HEAD' }))
+      if (head.ok) {
+        path = candidate
+        break
+      }
+    }
+    if (path === null) {
       return null
     }
     return env.LOADER.get(routeName, async () => {
