@@ -23,7 +23,8 @@
   ],
   "sideEffects": false,
   "dependencies": {
-    "@cloudflare/worker-bundler": "^0.1.3"
+    "@cloudflare/worker-bundler": "^0.1.3",
+    "resolve.exports": "^2.0.3"
   },
   "scripts": {
     "build": "bun run build:js && bun run build:dts",
